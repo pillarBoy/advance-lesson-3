@@ -8,7 +8,12 @@ import KittyCards from './KittyCards';
 
 export default function Kitties (props) {
   const { api, keyring } = useSubstrate();
+  const accounts = keyring.getPairs();
   const { accountPair } = props;
+
+  useEffect(() => {
+    console.log(accountPair);
+  }, [accountPair])
 
   const [kittyCnt, setKittyCnt] = useState(0);
   const [kittyDNAs, setKittyDNAs] = useState([]);
@@ -17,12 +22,36 @@ export default function Kitties (props) {
   const [kitties, setKitties] = useState([]);
   const [status, setStatus] = useState('');
 
+  // KittiesCount
   const fetchKittyCnt = () => {
     /* TODO: 加代码，从 substrate 端读取数据过来 */
+    api.query.kitties?.kittiesCount(({words}) => {
+      console.log('count', words);
+      setKittyCnt(words[0])
+    });
   };
 
   const fetchKitties = () => {
     /* TODO: 加代码，从 substrate 端读取数据过来 */
+    if (accountPair) {
+      let accountAddress = accounts.map((account) => account.address)
+
+      api.query.kitties?.accountKitties.multi(accountAddress, (kittiesArray) => {
+        let kitties = []
+        // 构造前端需要的 kitties 数据结构
+        kittiesArray.map((accountKitties, accountIds) => {
+          if (accountKitties.length>0) {
+            accountKitties = accountKitties.map(k => {
+              k.address = accountAddress[accountIds]
+              k.id = k[0].words[0]
+              return k
+            })
+            kitties = [...kitties, ...accountKitties]
+          }
+        })
+        setKitties(kitties)
+      })
+    }
   };
 
   const populateKitties = () => {
@@ -41,7 +70,7 @@ export default function Kitties (props) {
         <TxButton
           accountPair={accountPair} label='创建小毛孩' type='SIGNED-TX' setStatus={setStatus}
           attrs={{
-            palletRpc: 'kittiesModule',
+            palletRpc: 'kitties',
             callable: 'create',
             inputParams: [],
             paramFields: []
@@ -49,6 +78,7 @@ export default function Kitties (props) {
         />
       </Form.Field>
     </Form>
+
     <div style={{ overflowWrap: 'break-word' }}>{status}</div>
   </Grid.Column>;
 }
