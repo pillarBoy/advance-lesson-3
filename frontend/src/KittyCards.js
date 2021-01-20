@@ -27,7 +27,7 @@ const TransferModal = props => {
   };
 
   return <Modal onClose={() => setOpen(false)} onOpen={() => setOpen(true)} open={open}
-    trigger={<Button basic color='blue'>转让</Button>}>
+    trigger={<Button disabled={kitty.address!==accountPair.address} basic color='blue'>转让</Button>}>
     <Modal.Header>毛孩转让</Modal.Header>
     <Modal.Content><Form>
       <Form.Input fluid label='毛孩 ID' readOnly value={kitty.id}/>
