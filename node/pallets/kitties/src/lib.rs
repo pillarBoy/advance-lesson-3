@@ -172,6 +172,7 @@ decl_module! {
             let sender_kitty_vec = AccountKitties::<T>::take(&sender);
             let mut to_kitty_vec = AccountKitties::<T>::take(&to);
             let mut new_sender_k_vec = Vec::new();
+
             for (kid, kt) in sender_kitty_vec.iter() {
                 if kid != &kitty_id {
                     new_sender_k_vec.push((*kid, kt));
@@ -182,6 +183,8 @@ decl_module! {
             AccountKitties::<T>::insert(&sender, new_sender_k_vec);
             AccountKitties::<T>::insert(&to, to_kitty_vec);
             KittyOwners::<T>::insert(&kitty_id, to.clone());
+            // update kitties owner
+            Kitties::<T>::insert(&to, kitty_id, kitty.clone());
 
             // 获取kitty的质押数量
             let amount = Self::lock_amount(kitty_id).ok_or(Error::<T>::InvalidaKittyId)?;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Grid, Message, Modal, Form, Label } from 'semantic-ui-react';
+import { Button, Card, Grid, Modal, Form } from 'semantic-ui-react';
 
 import KittyAvatar from './KittyAvatar';
 import { TxButton } from './substrate-lib/components';
@@ -13,7 +13,12 @@ const TransferModal = props => {
 
   const formChange = key => (ev, el) => {
     /* TODO: 加代码 */
-
+    console.log(key);
+    console.log('ev', ev);
+    console.log('el', el);
+    let v = {}
+    v[key] = el.value
+    setFormValue(v)
   };
 
   const confirmAndClose = (unsub) => {
@@ -34,7 +39,7 @@ const TransferModal = props => {
         accountPair={accountPair} label='确认转让' type='SIGNED-TX' setStatus={setStatus}
         onClick={confirmAndClose}
         attrs={{
-          palletRpc: 'kittiesModule',
+          palletRpc: 'kitties',
           callable: 'transfer',
           inputParams: [formValue.target, kitty.id],
           paramFields: [true, true]
@@ -57,14 +62,13 @@ const KittyCard = props => {
   let {dna, kitty, accountPair, setStatus} = props
 
   return <Card color='pink'>
-    {
-      kitty.address === accountPair.address 
-      ? <Card.Meta textAlign="right">
-        <span style={{padding: '10px 4px', borderRadius: '5px 5px 0 0', background: '#ff00c5', color: 'white'}}>我的</span>
-      </Card.Meta>
-      : null
-    }
-    
+    <Card.Meta textAlign="right">
+      {
+        kitty.address === accountPair.address 
+        ? <span style={{ padding: '2px 4px', borderRadius: '5px 5px 0 0', background: '#ff00c5', color: 'white'}}>我的</span>
+        : <span style={{ padding: '2px 4px'}}></span>
+      }
+    </Card.Meta>
     <KittyAvatar dna={dna} />
     <Card.Content>
       <div><strong>ID号: {kitty.id}</strong></div>

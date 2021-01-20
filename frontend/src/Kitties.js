@@ -11,10 +11,6 @@ export default function Kitties (props) {
   const accounts = keyring.getPairs();
   const { accountPair } = props;
 
-  useEffect(() => {
-    console.log(accountPair);
-  }, [accountPair])
-
   const [kittyCnt, setKittyCnt] = useState(0);
   const [kittyDNAs, setKittyDNAs] = useState([]);
   const [kittyOwners, setKittyOwners] = useState([]);
