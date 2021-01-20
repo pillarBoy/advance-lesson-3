@@ -13,12 +13,7 @@ const TransferModal = props => {
 
   const formChange = key => (ev, el) => {
     /* TODO: 加代码 */
-    console.log(key);
-    console.log('ev', ev);
-    console.log('el', el);
-    let v = {}
-    v[key] = el.value
-    setFormValue(v)
+    setFormValue({ key: el.value });
   };
 
   const confirmAndClose = (unsub) => {
@@ -27,7 +22,7 @@ const TransferModal = props => {
   };
 
   return <Modal onClose={() => setOpen(false)} onOpen={() => setOpen(true)} open={open}
-    trigger={<Button disabled={kitty.address!==accountPair.address} basic color='blue'>转让</Button>}>
+    trigger={<Button disabled={ kitty.address !== accountPair.address } basic color='blue'>转让</Button>}>
     <Modal.Header>毛孩转让</Modal.Header>
     <Modal.Content><Form>
       <Form.Input fluid label='毛孩 ID' readOnly value={kitty.id}/>
@@ -59,39 +54,39 @@ const KittyCard = props => {
     <TransferModal kitty={kitty} accountPair={accountPair} setStatus={setStatus}/> - 来作转让的弹出层
     ```
   */
-  let {dna, kitty, accountPair, setStatus} = props
+  const { dna, kitty, accountPair, setStatus } = props;
 
   return <Card color='pink'>
     <Card.Meta textAlign="right">
       {
-        kitty.address === accountPair.address 
-        ? <span style={{ padding: '2px 4px', borderRadius: '5px 5px 0 0', background: '#ff00c5', color: 'white'}}>我的</span>
-        : <span style={{ padding: '2px 4px'}}></span>
+        kitty.address === accountPair.address
+          ? <span style={{ padding: '2px 4px', borderRadius: '5px 5px 0 0', background: '#ff00c5', color: 'white' }}>我的</span>
+          : <span style={{ padding: '2px 4px' }}></span>
       }
     </Card.Meta>
     <KittyAvatar dna={dna} />
     <Card.Content>
       <div><strong>ID号: {kitty.id}</strong></div>
-      <div style={{fontSize: "12px", color:'gray' }}>基因：</div>
-      <p style={{fontSize: "12px", color:'gray' }}>{dna.join(', ')}</p>
+      <div style={{ fontSize: '12px', color: 'gray' }}>基因：</div>
+      <p style={{ fontSize: '12px', color: 'gray' }}>{dna.join(', ')}</p>
       <div>猫奴：</div>
-      <p style={{wordBreak:'break-all'}}>{kitty.address}</p>
+      <p style={{ wordBreak: 'break-all' }}>{kitty.address}</p>
     </Card.Content>
     <Card.Content textAlign="center">
       <TransferModal kitty={kitty} accountPair={accountPair} setStatus={setStatus}/>
     </Card.Content>
-  </Card>
+  </Card>;
 };
 
 const KittyCards = props => {
   const { kitties, accountPair, setStatus } = props;
   return <Grid columns={3} padded>
     {
-      kitties&&kitties.map(k => <Grid.Column key={k[0]}>
-        <KittyCard dna={k[1]} kitty={k} accountPair={accountPair}  setStatus={setStatus} />
+      kitties && kitties.map(k => <Grid.Column key={k[0]}>
+        <KittyCard dna={k[1]} kitty={k} accountPair={accountPair} setStatus={setStatus} />
       </Grid.Column>)
     }
-  </Grid>
+  </Grid>;
 };
 
 export default KittyCards;

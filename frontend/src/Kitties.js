@@ -21,32 +21,29 @@ export default function Kitties (props) {
   // KittiesCount
   const fetchKittyCnt = () => {
     /* TODO: 加代码，从 substrate 端读取数据过来 */
-    api.query.kitties?.kittiesCount(({words}) => {
-      console.log('count', words);
-      setKittyCnt(words[0])
-    });
+    api.query.kitties.kittiesCount(({ words }) => setKittyCnt(words[0]));
   };
 
   const fetchKitties = () => {
     /* TODO: 加代码，从 substrate 端读取数据过来 */
     if (accountPair) {
-      let accountAddress = accounts.map((account) => account.address)
+      const accountAddress = accounts.map(account => account.address);
 
-      api.query.kitties?.accountKitties.multi(accountAddress, (kittiesArray) => {
-        let kitties = []
+      api.query.kitties.accountKitties.multi(accountAddress, (kittiesArray) => {
+        let kitties = [];
         // 构造前端需要的 kitties 数据结构
-        kittiesArray.map((accountKitties, accountIds) => {
-          if (accountKitties.length>0) {
+        kittiesArray.forEach((accountKitties, accountIds) => {
+          if (accountKitties.length > 0) {
             accountKitties = accountKitties.map(k => {
-              k.address = accountAddress[accountIds]
-              k.id = k[0].words[0]
-              return k
-            })
-            kitties = [...kitties, ...accountKitties]
+              k.address = accountAddress[accountIds];
+              k.id = k[0].words[0];
+              return k;
+            });
+            kitties = [...kitties, ...accountKitties];
           }
-        })
-        setKitties(kitties)
-      })
+        });
+        setKitties(kitties);
+      });
     }
   };
 
